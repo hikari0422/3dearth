@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* Custom animations & variables if needed */
+@theme {
+  --color-brand-primary: #a855f7;
+  --color-brand-dark: #0f172a;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #030712; /* Sleek dark theme background */
+  color: #f3f4f6;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  user-select: none;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom transitions and scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.6);
+}
