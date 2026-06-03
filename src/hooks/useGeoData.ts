@@ -42,8 +42,8 @@ export function useWorldGeoData() {
 
   useEffect(() => {
     let active = true
-    // Using high quality but lightweight 110m world atlas
-    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    // Using high quality but lightweight local 110m world atlas
+    fetch('/countries-110m.json')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch world geojson')
         return res.json()
@@ -55,8 +55,8 @@ export function useWorldGeoData() {
         const decoded = topojson.feature(topoData, topoData.objects.countries) as any
 
         // Inject ISO code map since world-atlas countries-110m.json uses numeric IDs
-        // Let's load the country names lookup file to match ISO-3 codes (using world-atlas@1's TSV mapping)
-        return fetch('https://cdn.jsdelivr.net/npm/world-atlas@1/world/110m.tsv')
+        // Let's load the country names lookup file to match ISO-3 codes (using local TSV mapping)
+        return fetch('/110m.tsv')
           .then((res) => {
             if (!res.ok) throw new Error('Failed to fetch world TSV metadata')
             return res.text()

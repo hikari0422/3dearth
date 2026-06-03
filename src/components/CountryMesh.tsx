@@ -12,6 +12,7 @@ interface CountryMeshProps {
   radius?: number
   opacity?: number
   hoverOpacity?: number
+  showBorders?: boolean
 }
 
 export const CountryMesh: React.FC<CountryMeshProps> = React.memo(({
@@ -22,7 +23,8 @@ export const CountryMesh: React.FC<CountryMeshProps> = React.memo(({
   onClick,
   radius = 1.002, // Slightly above ocean surface
   opacity = 0.65, // Vibrant default opacity
-  hoverOpacity = 0.85 // High-contrast hover opacity
+  hoverOpacity = 0.85, // High-contrast hover opacity
+  showBorders = true
 }) => {
   const [hovered, setHovered] = useState<boolean>(false)
 
@@ -199,7 +201,7 @@ export const CountryMesh: React.FC<CountryMeshProps> = React.memo(({
       ))}
 
       {/* B. Sharp Borders Outline */}
-      {geometries.lines.map((geom, idx) => (
+      {showBorders && geometries.lines.map((geom, idx) => (
         <lineLoop key={`line-${idx}`} geometry={geom}>
           <lineBasicMaterial
             color={hovered ? '#ffffff' : '#6366f1'} // Vibrant neon indigo lines

@@ -255,3 +255,52 @@ export function subdivideAndProjectGeometry(
   return finalGeom
 }
 
+/**
+ * Converts a 3D Cartesian coordinate on the Earth sphere back to geographical coordinates (latitude/longitude).
+ *
+ * @param x - X coordinate
+ * @param y - Y coordinate
+ * @param z - Z coordinate
+ * @returns An array containing [lat, lng]
+ */
+export function vector3ToLatLng(x: number, y: number, z: number): [number, number] {
+  const radius = Math.sqrt(x * x + y * y + z * z)
+  if (radius < 1e-6) return [0, 0]
+
+  // lat = arcsin(y / radius)
+  const lat = Math.asin(y / radius) * (180 / Math.PI)
+
+  // lng = arctan2(x, z)
+  const lng = Math.atan2(x, z) * (180 / Math.PI)
+
+  return [lat, lng]
+}
+
+/**
+ * Calculates a list of points along a curved Bezier arc on the sphere between two 3D vectors.
+ *
+ * @param a - Start Vector3
+ * @param b - End Vector3
+ * @param elevationFactor - How high the arc rises above the sphere surface (default 0.25)
+ * @returns A list of Vector3 points forming the curve
+ */
+export function getSphereArcPoints(
+  a: THREE.Vector3,
+  b: THREE.Vector3,
+  elevationFactor: number = 0.25
+): THREE.Vector3[] {
+  const dist = a.distanceTo(b)
+  if (dist < 0.05) return [a.clone(), b.clone()]
+
+  // Calculate normalized midpoint and scale it out to create the peak of the arc
+  const mid = new THREE.Vector3().addVectors(a, b).multiplyScalar(0.5)
+  const height = 1.0 + dist * elevationFactor
+  const controlPoint = mid.clone().normalize().multiplyScalar(height)
+
+  // Generate Bezier path points
+  const curve = new THREE.QuadraticBezierCurve3(a, controlPoint, b)
+  return curve.getPoints(24) // 24 points for good rendering performance
+}
+
+
+

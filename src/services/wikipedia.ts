@@ -2,6 +2,7 @@ export interface WikipediaInfo {
   title: string
   extract: string
   thumbnailUrl?: string
+  fullUrl?: string
 }
 
 // English to Traditional Chinese country translation mapping for high-speed direct queries
@@ -87,7 +88,7 @@ export async function fetchWikipediaInfo(placeName: string, lang: 'en' | 'zh' = 
 
   const subdomain = lang === 'zh' ? 'zh' : 'en'
   // Added redirects=1 to allow Wikipedia to automatically resolve English-to-Chinese redirects!
-  const url = `https://${subdomain}.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|pageimages&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*&redirects=1&titles=${encodeURIComponent(queryName)}`
+  const url = `https://${subdomain}.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|pageimages|info&inprop=url&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=400&origin=*&redirects=1&titles=${encodeURIComponent(queryName)}`
 
   try {
     const response = await fetch(url)
@@ -107,7 +108,8 @@ export async function fetchWikipediaInfo(placeName: string, lang: 'en' | 'zh' = 
     return {
       title: page.title,
       extract: page.extract || (lang === 'zh' ? '目前沒有此地點的詳細說明。' : 'No information summary is available for this location.'),
-      thumbnailUrl: page.thumbnail?.source
+      thumbnailUrl: page.thumbnail?.source,
+      fullUrl: page.fullurl
     }
   } catch (error) {
     console.error('Error fetching Wikipedia summary:', error)
